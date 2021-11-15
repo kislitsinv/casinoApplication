@@ -1,7 +1,5 @@
 # Report on what's done
 
-Video report is here: https://drive.google.com/drive/folders/1ku0BR5zrSo35XTTz4FYnO5ZNGZrpfzZD?usp=sharing
-
 1) Everything on the objective, except 1-2-3 second delays on frontend side (explain it further)
 2) Rather user-friendly interface with pics and dialogs)
 3) Code base - 1 controller, 1 service interface, 1 implementation, 1 enum class (and a bunch of html-css-js stuff)
