@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST#1 FOR CANDR | CASINO</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
+    <style type="text/css">
+        #cashOut {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+
+        <!-- IF WE JUST ENTERED -->
+        <div th:if="${isNew == true}" class="col text-center align-content-center"><br />
+        Bouncer: "I see you are the new one visitor. Please provide us your name."<br />
+            <img src="/img/bouncer.webp" alt="Bouncer" /><br /><br />
+            <form class="form-inline justify-content-center" method="post">
+                <div class="col">
+                    <label for="userName" class="visually-hidden">Name</label>
+                    <input type="text" class="form-control" id="userName" name="userName" placeholder="Your name here"><br />
+                    <button type="submit" class="btn btn-primary mb-3">Confirm identity</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- IF CASINO ALREADY KNOWS WHO WE ARE -->
+        <div th:if="${username}" class="col text-center align-content-center">
+
+            <!-- CROUPIER GIVES US SOME MONEY -->
+            <div th:if="${credits == null}"><br />
+                Croupier: "Hello, <span th:text="${username}"></span>! Wanna test your luck in our casino? Here, take your 10 credits as a gift."<br />
+                <img src="/img/croup.jpg" width="500" alt="Croupier" /><br />
+                <form class="form-inline justify-content-center" method="post">
+                    <div class="col"><br />
+                        <input type="hidden" name="userName" th:value="${username}">
+                        <input type="hidden" name="credits" value="10">
+                        <button type="submit" class="btn btn-primary mb-3">Wow, thanx, I'll take them</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- WE SEE RANDOM COMPONENTS AND ALREADY CAN SPIN -->
+            <div th:if="${credits != null}"><br />
+                <div th:if="${credits > 0}">
+                    Good luck, <span th:text="${username}"></span>!<br /><br />
+                    <table class="table table-borderless">
+                        <thead></thead>
+                        <tbody>
+                        <tr>
+                            <td th:each="c: ${randomComponents}"><img width="100" height="100" th:alt="${c}" th:src="'/img/' + ${c} + '.png'"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center" class="text-center">
+                                <form class="form-inline justify-content-center" method="post" action="/spin">
+                                    <div class="col">
+                                        <br />
+                                        <button type="submit" class="btn btn-success mb-3">TRY MY LUCK!</button>
+                                        <div th:if="${credits > 10}">
+                                            <br />
+                                            <button data-href="/givememymoney" type="button" id="cashOut" class="small btn btn-info mb-3 text-white">$$$ CASH OUT $$$</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h2><b><span th:text="${credits}"></span></b> credits</h2>
+
+                    <div class="bg-opacity-50" th:if="${targetHit != null}">
+                        <span th:if="${targetHit==true}" class="badge bg-success">WOW! You hit the bingo!</span>
+                        <span th:if="${targetHit==false}" class="badge bg-dark">No luck this time. Try again.</span>
+                        <br /><br />
+                    </div>
+                </div>
+
+                <div th:if="${credits == 0}">
+                    Well... you're out of money, my friend. See you next time!
+                    <form class="form-inline justify-content-center" method="get" action="/quit">
+                        <div class="col">
+                            <br />
+                            <button type="submit" class="btn btn-danger mb-3">Ok, Bye =(</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <span class="text-dark ssv-small-label small">BTW, your session ID is <span th:text="${session}"></span></span><br />
+        </div>
+
+    </div>
+</div>
+<script src="/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(function() {
+        $("#cashOut").on({
+            mouseover: function() {
+                let poss = Math.floor((Math.random() * 100) + 1);
+                console.log("Button random result: " + poss);
+                if (poss <= 40) {
+                    $(this).addClass("disabled").removeAttr("data-href");
+                }
+                if (poss <= 50) {
+                    $(this).css({
+                        left: (Math.random() * 300) + "px",
+                        top: (Math.random() * 300) + "px",
+                    });
+                }
+            },
+            click: function(){
+                window.location.href = $(this).attr("data-href");
+            }
+        });
+    });
+</script>
+</body>
+</html>
